@@ -1,27 +1,23 @@
 Rails.application.routes.draw do
   namespace :admin do
-    get 'users/index'
-    get 'users/show'
-    get 'users/edit'
+    resources :users, only: [:index, :show, :edit, :update]
   end
-  namespace :public do
-    get 'users/my_page'
-    get 'users/show'
-    get 'users/edit'
-    get 'users/likes'
-    get 'users/stop'
+
+  scope module: :public do
+    root to: 'homes#top'
+    resources :movies, only: [:new, :icreate, :index, :edit, :updeta, :destroy]do
+      collection do
+        get :research
+      end
+      resource :likes, only: [:create, :destroy]do
+      end
+    end
+    resources :user, only: [:my_page, :show, :edit, :update, :stop, :withdraw, :likes]do
+    end
   end
-  namespace :public do
-    get 'movies/new'
-    get 'movies/index'
-    get 'movies/edit'
-    get 'movies/research'
-  end
-  namespace :public do
-    get 'homes/top'
-  end
+
   devise_for :admin, skip: [:registrations, :passwords], controllers: {
-    sessinons: "admin/sessions"
+    sessions: "admin/sessions"
   }
 
   devise_for :users, skip: [:passwords], controllers:{
